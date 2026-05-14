@@ -6,8 +6,8 @@ A Firefox port of [teja2495/my-toolkit-chrome](https://github.com/teja2495/my-to
 - `manifest.json` uses `background.scripts` instead of `background.service_worker` (Firefox MV3 requirement) and adds `browser_specific_settings` for the Gecko engine
 - "Manage Extensions" opens `about:addons` instead of `chrome://extensions`
 - `newtab-redirect.js` guards against `about:newtab` redirect loops
-
-Everything else is identical to the original.
+- Added YouTube Shorts blocker — redirects `/shorts/` URLs to the regular watch page and hides Shorts everywhere on the site
+- Added YouTube Playables blocker — redirects `/playables/` to the homepage and hides the Playables shelf and nav entry
 
 ## Install
 
@@ -46,6 +46,7 @@ Configured in [custom-context-menu-actions.js](custom-context-menu-actions.js).
 - **Topbar shortcuts** ([youtube-topbar-buttons.js](youtube-topbar-buttons.js)) — Adds Watch Later and Playlists button in top header.
 - **Homepage "Watch Later on title click"** ([youtube-homepage-watch-later.js](youtube-homepage-watch-later.js)) — adds videos to Watch Later when you click on the video title in homepage.
 - **YouTube Music playlist filtering** ([yt-music-playlist-filtering.js](yt-music-playlist-filtering.js)) — hides specific playlists I don't want cluttering my library (edit the `PLAYLISTS_TO_HIDE` list to customize).
+- **Shorts & Playables blocker** ([youtube-shorts-blocker.js](youtube-shorts-blocker.js)) — redirects Shorts to the regular watch page, redirects Playables to the homepage, and hides both from the sidebar nav, homepage shelves, and recommendations.
 
 ## Notes
 

@@ -22,6 +22,15 @@
                 "*://www.youtube.com/*"
             ],
             "js": [
+                "youtube-shorts-blocker.js"
+            ],
+            "run_at": "document_start"
+        },
+        {
+            "matches": [
+                "*://www.youtube.com/*"
+            ],
+            "js": [
                 "youtube-player-buttons.js",
                 "youtube-watch-t-keypress.js",
                 "youtube-playlist-buttons.js",

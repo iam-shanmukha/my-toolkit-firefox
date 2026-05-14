@@ -205,3 +205,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Enter') saveButton.click();
     });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('manageExtensionsButton');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+        chrome.tabs.create({ url: 'about:addons' });
+    });
+});
