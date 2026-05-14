@@ -1,0 +1,355 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&display=swap');
+
+:root {
+    --bg-base: #181818;
+    --bg-overlay: #1d1d1d;
+    --surface: #2a2a2a;
+    --surface-muted: #232323;
+    --surface-hover: #313131;
+    --surface-active: #373737;
+    --border-subtle: #343434;
+    --border-strong: #3e3e3e;
+    --text-primary: #d0cec8;
+    --text-secondary: #b3b1ab;
+    --text-muted: #8d8a84;
+    --text-faint: #706d68;
+    --accent-warm: #d27a57;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(120% 120% at 50% 8%, var(--bg-overlay) 0%, var(--bg-base) 58%);
+    color: var(--text-primary);
+    font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+}
+
+.search-wrapper {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 660px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin-top: 28vh;
+}
+
+.greeting-text {
+    font-size: clamp(32px, 4.6vw, 48px);
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 28px;
+    line-height: 1.1;
+    min-height: 1.1em;
+    text-align: center;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.name-prompt {
+    display: none;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.name-prompt-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border-strong);
+    color: var(--text-secondary);
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    padding: 4px 8px;
+    outline: none;
+    text-align: center;
+    width: 240px;
+    transition: border-color 0.2s, color 0.2s;
+}
+
+.name-prompt-input::placeholder {
+    color: var(--text-muted);
+}
+
+.name-prompt-input:focus {
+    border-bottom-color: var(--accent-warm);
+    color: var(--text-primary);
+}
+
+.search-box {
+    --search-line: 1.45;
+    --search-font: 20px;
+    --search-max-lines: 17;
+    --engine-prefix-size: 20px;
+    background: var(--surface);
+    border: 1px solid color-mix(in srgb, var(--surface) 72%, var(--border-subtle));
+    border-radius: 28px;
+    padding: 12px 16px;
+    transition: border-color 0.2s ease, background 0.2s ease;
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.search-box:focus-within {
+    border-color: color-mix(in srgb, #ffffff 18%, var(--border-subtle));
+}
+
+.engine-prefix {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: var(--engine-prefix-size);
+    min-width: var(--engine-prefix-size);
+    align-self: flex-start;
+    user-select: none;
+    color: var(--text-muted);
+    line-height: 0;
+    font-size: var(--search-font);
+    height: calc(var(--search-line) * 1em);
+    min-height: calc(var(--search-line) * 1em);
+    box-sizing: content-box;
+}
+
+.engine-prefix:has(svg, img) .engine-btn-icon,
+.engine-prefix:has(svg, img) .engine-btn-icon--img {
+    width: 20px;
+    height: 20px;
+    display: block;
+    margin: 0;
+}
+
+.engine-prefix:not(:has(svg, img)) {
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.55;
+    height: auto;
+    min-height: 1.55em;
+}
+
+.engine-prefix-divider {
+    width: 1px;
+    flex-shrink: 0;
+    align-self: stretch;
+    min-height: calc(var(--search-line) * var(--search-font));
+    background: var(--border-strong);
+    opacity: 0.95;
+}
+
+.search-input {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+    margin: 0;
+    padding: 0;
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-size: var(--search-font);
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: var(--search-line);
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: calc(var(--search-max-lines) * var(--search-line) * 1em);
+    min-height: calc(var(--search-line) * 1em);
+    display: block;
+    caret-color: var(--engine-color, var(--accent-warm));
+    transition: color 0.2s ease, caret-color 0.2s ease;
+}
+
+.search-input::placeholder {
+    color: var(--text-faint);
+}
+
+.bookmarks-results {
+    display: none;
+    flex-direction: column;
+    margin-top: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.bookmarks-results:not(:empty) {
+    display: flex;
+}
+
+.bookmark-item {
+    padding: 12px 16px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-bottom: 1px solid var(--border-subtle);
+    transition: background 0.15s;
+    cursor: pointer;
+}
+
+.bookmark-item:last-child {
+    border-bottom: none;
+}
+
+.bookmark-item:hover,
+.bookmark-item.selected {
+    background: var(--surface-hover);
+}
+
+.bookmark-title {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bookmark-url {
+    font-size: 13px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ── Engine buttons ───────────────────────────────────────── */
+
+.engines {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+    width: 100%;
+}
+
+.engine-cell {
+    display: flex;
+    align-items: stretch;
+    min-height: 48px;
+    border-radius: 14px;
+    background: var(--surface-muted);
+    border: 1px solid var(--border-subtle);
+    overflow: hidden;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.engine-cell:hover {
+    background: var(--surface-hover);
+    border-color: var(--border-strong);
+}
+
+.engine-btn {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 10px 12px 16px;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: 'Manrope', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.15s, opacity 0.15s;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+}
+
+.engine-external {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-left: 1px solid var(--border-subtle);
+    background: transparent;
+    color: var(--text-faint);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s;
+}
+
+.engine-external:hover {
+    color: var(--text-secondary);
+    background: var(--surface-active);
+}
+
+.engine-external-icon {
+    display: block;
+}
+
+.engine-btn-icon {
+    flex-shrink: 0;
+    display: block;
+    margin-top: 1px;
+}
+
+.engine-btn-icon--img {
+    margin-top: 0;
+}
+
+.engine-cell:hover .engine-btn {
+    color: var(--text-primary);
+}
+
+.bottom-actions {
+    position: fixed;
+    left: 50%;
+    bottom: 28px;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.utility-pill {
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    background: var(--surface-muted);
+    color: var(--text-secondary);
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.utility-pill:hover {
+    background: var(--surface-hover);
+    border-color: var(--border-strong);
+    color: var(--text-primary);
+}

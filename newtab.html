@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="color-scheme" content="dark">
+    <title>New Tab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="newtab.css">
+</head>
+<body>
+    <div class="container">
+        <div class="search-wrapper">
+            <h1 id="greetingText" class="greeting-text"></h1>
+            <div id="namePrompt" class="name-prompt">
+                <input type="text" id="namePromptInput" class="name-prompt-input" placeholder="What's your name?" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="search-box">
+                <span id="enginePrefix" class="engine-prefix" aria-hidden="true"></span>
+                <span class="engine-prefix-divider" aria-hidden="true"></span>
+                <textarea
+                    id="searchInput"
+                    class="search-input"
+                    placeholder="Search anything..."
+                    rows="1"
+                    autocomplete="off"
+                    spellcheck="false"
+                    autofocus
+                ></textarea>
+            </div>
+
+            <div id="bookmarksResults" class="bookmarks-results"></div>
+
+            <div class="engines" id="engineButtons"></div>
+            <div class="bottom-actions">
+                <button type="button" id="closeOtherTabsButton" class="utility-pill">Close Other Tabs</button>
+                <button type="button" id="manageExtensionsButton" class="utility-pill">Manage Extensions</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="newtab.js"></script>
+</body>
+</html>

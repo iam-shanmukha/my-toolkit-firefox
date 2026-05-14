@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body {
+            width: 350px;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #121417;
+            margin: 0;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 18px;
+            color: #f5f7fa;
+            margin: 0;
+        }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .toggle-label {
+            font-weight: 500;
+            color: #f5f7fa;
+        }
+        
+        .toggle {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: #666b73;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .toggle.active {
+            background: #4CAF50;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .toggle.active .toggle-slider {
+            transform: translateX(26px);
+        }
+        
+        .domain-section {
+            background: #1b1f24;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+            margin-top: 15px;
+        }
+
+        .setting-section {
+            background: #1b1f24;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+            margin-top: 15px;
+        }
+        
+        .domain-input-container {
+            margin-bottom: 15px;
+        }
+
+        .domain-controls {
+            transition: opacity 0.2s;
+            margin-top: 12px;
+        }
+        
+        .domain-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #2a2f36;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+            background: #121417;
+            color: #f5f7fa;
+        }
+        
+        .domain-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .setting-title {
+            margin: 0 0 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #f5f7fa;
+        }
+
+        .setting-help {
+            margin: 0 0 10px;
+            font-size: 12px;
+            color: #b0b7c3;
+        }
+
+        .setting-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .setting-row .domain-input {
+            margin: 0;
+        }
+
+        .save-button {
+            border: none;
+            border-radius: 6px;
+            background: #4CAF50;
+            color: white;
+            padding: 0 12px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .save-button:hover {
+            background: #45a049;
+        }
+
+        .setting-feedback {
+            margin-top: 8px;
+            min-height: 16px;
+            font-size: 12px;
+            color: #b0b7c3;
+        }
+
+        .setting-feedback.error {
+            color: #cc0000;
+        }
+
+        .action-button {
+            width: 100%;
+            border: none;
+            border-radius: 6px;
+            background: #2a2f36;
+            color: #f5f7fa;
+            padding: 10px 12px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+            transition: background 0.2s;
+        }
+
+        .action-button:hover {
+            background: #353b44;
+        }
+        
+        
+        .domain-list {
+            margin-top: 15px;
+        }
+        
+        .domain-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: #121417;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+        
+        .domain-text {
+            font-size: 14px;
+            color: #e7ebf1;
+            word-break: break-all;
+        }
+        
+        .remove-button {
+            background: none;
+            color: #ff4444;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: color 0.3s;
+        }
+        
+        .remove-button:hover {
+            color: #cc0000;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #b0b7c3;
+            font-style: italic;
+            padding: 20px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Toolkit</h1>
+    </div>
+
+    <div class="domain-section" id="domainSection">
+        <div class="toggle-container">
+            <span class="toggle-label">Domain Blocking</span>
+            <div class="toggle" id="toggle">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+
+        <div class="domain-controls" id="domainControls">
+            <div class="domain-input-container">
+                <input type="text" id="domainInput" class="domain-input" placeholder="Enter domain to block">
+            </div>
+
+            <div class="domain-list" id="domainList">
+                <div class="empty-state">No domains blocked yet</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="setting-section">
+        <p class="setting-title">Your Name</p>
+        <p class="setting-help">Shown in the new tab greeting.</p>
+        <div class="setting-row">
+            <input type="text" id="nameInput" class="domain-input" placeholder="Enter your name">
+            <button id="saveNameButton" class="save-button">Save</button>
+        </div>
+        <p id="nameFeedback" class="setting-feedback"></p>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
