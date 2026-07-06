@@ -19,30 +19,39 @@ const VISIBLE_ENGINES = ENGINES.filter(engine => !ALIAS_ONLY_ENGINE_IDS.has(engi
 let currentBookmarks = [];
 let selectedBookmarkIndex = -1;
 
-function escapeHtml(str) {
-    return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
+// Parses fixed, author-authored SVG markup (never user/runtime data) into
+// real nodes, instead of assigning it via innerHTML.
+function parseTrustedFragment(htmlString) {
+    const doc = new DOMParser().parseFromString(`<template>${htmlString}</template>`, 'text/html');
+    const fragment = document.createDocumentFragment();
+    fragment.append(...doc.querySelector('template').content.childNodes);
+    return fragment;
 }
 
 function renderBookmarks() {
     const container = document.getElementById('bookmarksResults');
     if (!container) return;
-    
-    if (currentBookmarks.length === 0) {
-        container.innerHTML = '';
-        return;
-    }
-    
-    container.innerHTML = currentBookmarks.map((b, idx) => `
-        <a href="${b.url}" class="bookmark-item ${idx === selectedBookmarkIndex ? 'selected' : ''}" data-index="${idx}">
-            <div class="bookmark-title">${escapeHtml(b.title || b.url)}</div>
-            <div class="bookmark-url">${escapeHtml(b.url)}</div>
-        </a>
-    `).join('');
+
+    container.textContent = '';
+
+    currentBookmarks.forEach((b, idx) => {
+        const link = document.createElement('a');
+        link.href = b.url;
+        link.className = idx === selectedBookmarkIndex ? 'bookmark-item selected' : 'bookmark-item';
+        link.dataset.index = String(idx);
+
+        const title = document.createElement('div');
+        title.className = 'bookmark-title';
+        title.textContent = b.title || b.url;
+
+        const url = document.createElement('div');
+        url.className = 'bookmark-url';
+        url.textContent = b.url;
+
+        link.appendChild(title);
+        link.appendChild(url);
+        container.appendChild(link);
+    });
 }
 
 function clearBookmarkResults() {
@@ -117,8 +126,9 @@ function updateEnginePrefix(engine) {
     const name = engine?.name || '';
     prefix.title = name;
     const logoHtml = getEngineLogoHtml(engine?.id);
+    prefix.textContent = '';
     if (logoHtml) {
-        prefix.innerHTML = logoHtml;
+        prefix.appendChild(parseTrustedFragment(logoHtml));
     } else {
         const initial = name.trim().charAt(0).toUpperCase() || '?';
         prefix.textContent = initial;
@@ -137,29 +147,40 @@ function homeUrlWithoutQuery(homeUrl) {
 
 function renderEngines() {
     const container = document.getElementById('engineButtons');
-    container.innerHTML = VISIBLE_ENGINES.map(engine => {
+    container.textContent = '';
+
+    VISIBLE_ENGINES.forEach(engine => {
         const logo = getEngineLogoHtml(engine.id);
         const openUrl = engine.externalUrl || homeUrlWithoutQuery(engine.homeUrl);
-        return `
-        <div class="engine-cell" data-engine="${engine.id}">
-            <button
-                type="button"
-                class="engine-btn"
-                data-engine="${engine.id}"
-                title="${engine.name}"
-            >
-                ${logo}
-                <span class="engine-btn-text">${engine.name}</span>
-            </button>
-            <a
-                class="engine-external"
-                href="${openUrl}"
-                title="Open ${engine.name}"
-                aria-label="Open ${engine.name}"
-            >${EXTERNAL_LINK_SVG}</a>
-        </div>
-    `;
-    }).join('');
+
+        const cell = document.createElement('div');
+        cell.className = 'engine-cell';
+        cell.dataset.engine = engine.id;
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'engine-btn';
+        button.dataset.engine = engine.id;
+        button.title = engine.name;
+        if (logo) {
+            button.appendChild(parseTrustedFragment(logo));
+        }
+        const btnText = document.createElement('span');
+        btnText.className = 'engine-btn-text';
+        btnText.textContent = engine.name;
+        button.appendChild(btnText);
+
+        const external = document.createElement('a');
+        external.className = 'engine-external';
+        external.href = openUrl;
+        external.title = `Open ${engine.name}`;
+        external.setAttribute('aria-label', `Open ${engine.name}`);
+        external.appendChild(parseTrustedFragment(EXTERNAL_LINK_SVG));
+
+        cell.appendChild(button);
+        cell.appendChild(external);
+        container.appendChild(cell);
+    });
 
     container.querySelectorAll('.engine-btn').forEach(btn => {
         btn.addEventListener('pointerdown', (event) => {

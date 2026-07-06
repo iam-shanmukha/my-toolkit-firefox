@@ -132,24 +132,32 @@ class DomainBlocker {
     }
     
     renderDomainList(domains) {
+        this.domainList.textContent = '';
+
         if (domains.length === 0) {
-            this.domainList.innerHTML = '<div class="empty-state">No domains blocked yet</div>';
+            const empty = document.createElement('div');
+            empty.className = 'empty-state';
+            empty.textContent = 'No domains blocked yet';
+            this.domainList.appendChild(empty);
             return;
         }
-        
-        this.domainList.innerHTML = domains.map(domain => `
-            <div class="domain-item">
-                <span class="domain-text">${this.escapeHtml(domain)}</span>
-                <button class="remove-button" data-domain="${this.escapeHtml(domain)}"> ❌ </button>
-            </div>
-        `).join('');
-        
-        // Add event listeners to remove buttons
-        this.domainList.querySelectorAll('.remove-button').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const domain = e.target.getAttribute('data-domain');
-                this.removeDomain(domain);
-            });
+
+        domains.forEach(domain => {
+            const item = document.createElement('div');
+            item.className = 'domain-item';
+
+            const text = document.createElement('span');
+            text.className = 'domain-text';
+            text.textContent = domain;
+
+            const removeButton = document.createElement('button');
+            removeButton.className = 'remove-button';
+            removeButton.textContent = ' ❌ ';
+            removeButton.addEventListener('click', () => this.removeDomain(domain));
+
+            item.appendChild(text);
+            item.appendChild(removeButton);
+            this.domainList.appendChild(item);
         });
     }
     
@@ -159,13 +167,6 @@ class DomainBlocker {
         const domainRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
         return domainRegex.test(domain) && domain.length > 0 && domain.length < 253;
     }
-    
-    escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-    
     
     notifyContentScripts() {
         // Send message to all tabs to update domain blocking
