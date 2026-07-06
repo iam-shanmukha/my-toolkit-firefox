@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Toolkit",
+    "name": "AI Tab Toolkit",
     "version": "1.0",
     "description": "Unlocks useful features",
     "browser_specific_settings": {
@@ -14,7 +14,7 @@
     },
     "action": {
         "default_popup": "popup.html",
-        "default_title": "Toolkit"
+        "default_title": "AI Tab Toolkit"
     },
     "chrome_url_overrides": {
         "newtab": "newtab.html"
